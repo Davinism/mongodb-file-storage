@@ -18,7 +18,9 @@ class AppController @Inject() extends Controller {
    * a path of `/`.
    */
   def index = Action {
-    println("Hello, Davin!")
+    val oneTwoThree = List(1, 2, 3)
+    val fourFiveSix = List(4, 5, 6)
+    println(oneTwoThree.:::(fourFiveSix))
     Ok("Your new application is ready.")
   }
 
