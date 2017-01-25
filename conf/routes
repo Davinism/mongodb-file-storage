@@ -4,3 +4,4 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.AppController.index
+POST    /                           controllers.AppController.save

@@ -1,0 +1,15 @@
+@(message: String)
+
+@main("MongoDB File Storage") {
+    <div>
+        <div>
+            @message
+        </div>
+        @helper.form(action = routes.AppController.save, 'enctype -> "multipart/form-data") {
+            <input type="file" name="picture">
+            <div>
+                <input type="submit" class="btn">
+            </div>
+        }
+    </div>
+}
