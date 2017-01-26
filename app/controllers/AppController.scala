@@ -3,20 +3,16 @@ package controllers
 import javax.inject._
 
 import akka.stream.Materializer
-import org.joda.time.DateTime
-import play.api.mvc._
 import play.api.Logger
-import java.io.{File, FileInputStream}
 
-import scala.concurrent.{Await, Future, duration}
+import scala.concurrent.{Await, duration}
 import duration.Duration
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, Controller, Request}
+import play.api.i18n.MessagesApi
+import play.api.mvc.{Action, Controller}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsObject, JsString, Json}
-import reactivemongo.api.gridfs.{DefaultFileToSave, GridFS, ReadFile}
+import reactivemongo.api.gridfs.{GridFS, ReadFile}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
-import reactivemongo.bson.BSONValue
 import reactivemongo.play.json._
 import reactivemongo.play.json.collection._
 
