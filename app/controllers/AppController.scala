@@ -75,13 +75,19 @@ class AppController @Inject() (
     }
   }
 
-  def getAllFiles = Action.async { request =>
+  def showAllFiles = Action.async { request =>
     gridFS.flatMap { fs =>
       fs.find[JsObject, JSONReadFile](Json.obj()).collect[List]().map { files =>
         @inline def filesWithId = files.map { file => file.id -> file }
 
-        Ok("Got the files")
+        Ok(views.html.show("Files stored: ", Some(filesWithId)))
       }
+    }
+  }
+
+  def deleteFile(id: String) = Action.async { request =>
+    gridFS.flatMap(_.remove(Json toJson id).map(_ => Ok)).recover {
+      case _ => InternalServerError
     }
   }
 

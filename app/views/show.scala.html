@@ -1,0 +1,17 @@
+@(message: String, files: Option[List[(play.api.libs.json.JsString, reactivemongo.api.gridfs.ReadFile[reactivemongo.play.json.JSONSerializationPack.type, play.api.libs.json.JsString])]])
+
+@main("Stored Files") {
+    @if(files.isDefined) {
+        <ul>
+            @files.get.map { file =>
+              <li>
+                  <a href="@routes.AppController.getFile(file._1.value)">@file._2.filename</a>
+                  -
+                  <a target="_blank" href="@routes.AppController.getFile(file._1.value)?inline=true">inline</a>
+                  -
+                  <a class="delete" href="@routes.AppController.deleteFile(file._1.value)">delete</a>
+              </li>
+            }
+        </ul>
+    }
+}
