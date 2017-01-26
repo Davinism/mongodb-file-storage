@@ -5,3 +5,5 @@
 # An example controller showing a sample home page
 GET     /                           controllers.AppController.index
 POST    /                           controllers.AppController.save
+GET     /files/:id                  controllers.AppController.getFile(id)
+GET     /files                      controllers.AppController.getAllFiles

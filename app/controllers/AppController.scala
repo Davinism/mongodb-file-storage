@@ -6,6 +6,7 @@ import akka.stream.Materializer
 import org.joda.time.DateTime
 import play.api.mvc._
 import play.api.Logger
+import java.io.{File, FileInputStream}
 
 import scala.concurrent.{Await, Future, duration}
 import duration.Duration
@@ -13,8 +14,9 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, Controller, Request}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json.{JsObject, JsString, Json}
-import reactivemongo.api.gridfs.{GridFS, ReadFile}
+import reactivemongo.api.gridfs.{DefaultFileToSave, GridFS, ReadFile}
 import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
+import reactivemongo.bson.BSONValue
 import reactivemongo.play.json._
 import reactivemongo.play.json.collection._
 
@@ -56,6 +58,29 @@ class AppController @Inject() (
 
       futureUpdate.recover {
         case e => InternalServerError(e.getMessage())
+      }
+    }
+  }
+
+  def getFile(id: String) = Action.async { request =>
+    gridFS.flatMap { fs =>
+      val file = fs.find[JsObject, JSONReadFile](Json.obj("_id" -> id))
+
+      request.getQueryString("inline") match {
+        case Some("true") =>
+          serve[JsString, JSONReadFile](fs)(file, CONTENT_DISPOSITION_INLINE)
+
+        case _ => serve[JsString, JSONReadFile](fs)(file)
+      }
+    }
+  }
+
+  def getAllFiles = Action.async { request =>
+    gridFS.flatMap { fs =>
+      fs.find[JsObject, JSONReadFile](Json.obj()).collect[List]().map { files =>
+        @inline def filesWithId = files.map { file => file.id -> file }
+
+        Ok("Got the files")
       }
     }
   }
